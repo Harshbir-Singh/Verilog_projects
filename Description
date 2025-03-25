@@ -1,0 +1,17 @@
+# Verilog_projects
+Software used: Vscode/Icarus Verilog compiler
+               Xilinx Vivado
+
+Projects:
+
+-Beginner:
+FullAdder
+OpAmp
+RippleCarryAdder
+
+-Intermediate:
+FSM's
+CMOS Inverter
+
+-Advanced:
+MIPS32 Processor
