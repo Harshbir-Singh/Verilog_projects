@@ -10,7 +10,7 @@ module top1(clk,rst,din,dout);
   parameter s3 = 4;
   parameter s4 = 5;
   
-  reg [4:0] state,nstate;
+  reg [4:0] state = idle,nstate = idle;
   
   always@(posedge clk)
     begin
