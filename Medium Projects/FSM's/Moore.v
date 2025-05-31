@@ -21,8 +21,7 @@ module top1(clk,rst,din,dout);
     end
   always@(state,din)
     begin
-      nstate = state;
-      dout = 1'b0;
+      
       case(state)
         idle:
           begin
@@ -78,7 +77,7 @@ module top1(clk,rst,din,dout);
             else
               begin
                 nstate = s4;
-                dout = 1'b0;
+                dout = 1'b1;
               end
           end
         s4:
@@ -86,12 +85,12 @@ module top1(clk,rst,din,dout);
             if(din == 1'b0)
               begin
                 nstate = s0;
-                dout = 1'b1;
+                dout = 1'b0;
               end
             else
               begin
                 nstate = s1;
-                dout = 1'b1;
+                dout = 1'b0;
               end
           end
       endcase
