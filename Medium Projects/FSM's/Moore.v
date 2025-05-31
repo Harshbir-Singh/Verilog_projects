@@ -1,26 +1,99 @@
-module moore(Y,x,clk);
-  input x,clk;
-  output Y;
-  wire A,B,in1,in2;
+//2 process methodology
+module top1(clk,rst,din,dout);
+  input clk,rst,din;
+  output reg dout;
   
-
-
-  FlipFlop D1(A,in1,clk);
-  FlipFlop D2(B,in2,clk);
-  assign in1 = x&B;
-  assign in2 = ~x|A;
-  assign Y = A&B;
-
-endmodule
-
-module FlipFlop(out,in,clk);
-
-  input in,clk;
-  output reg out;
-
+  parameter idle = 0;
+  parameter s0 = 1;
+  parameter s1 = 2;
+  parameter s2 = 3;
+  parameter s3 = 4;
+  parameter s4 = 5;
+  
+  reg [4:0] state,nstate;
+  
   always@(posedge clk)
-    begin 
-      out <= in;
+    begin
+      if(rst == 1'b1)  
+        state <= idle;  
+      else
+        state <= nstate;
     end
-
+  always@(state,din)
+    begin
+      nstate = state;
+      dout = 1'b0;
+      case(state)
+        idle:
+          begin
+            nstate = s0;
+            dout = 1'b0;
+          end
+        s0:
+          begin
+            if(din == 1'b0)
+              begin
+                nstate = s0;
+                dout = 1'b0;
+              end
+            else
+              begin
+                nstate = s1;
+                dout = 1'b0;
+              end
+          end
+        s1:
+          begin
+            if(din == 1'b0)
+              begin
+                nstate = s2;
+                dout = 1'b0;
+              end
+            else
+              begin
+                nstate = s1;
+                dout = 1'b0;
+              end
+          end
+        s2:
+          begin
+            if(din == 1'b0)
+              begin
+                nstate = s3;
+                dout = 1'b0;
+              end
+            else
+              begin
+                nstate = s1;
+                dout = 1'b0;
+              end
+          end
+        s3:
+          begin
+            if(din == 1'b0)
+              begin
+                nstate = s0;
+                dout = 1'b0;
+              end
+            else
+              begin
+                nstate = s4;
+                dout = 1'b0;
+              end
+          end
+        s4:
+          begin
+            if(din == 1'b0)
+              begin
+                nstate = s0;
+                dout = 1'b1;
+              end
+            else
+              begin
+                nstate = s1;
+                dout = 1'b1;
+              end
+          end
+      endcase
+    end
 endmodule
