@@ -1,5 +1,5 @@
 //2 process methodology
-module top1(clk,rst,din,dout);
+module moore(clk,rst,din,dout);
   input clk,rst,din;
   output reg dout;
   
