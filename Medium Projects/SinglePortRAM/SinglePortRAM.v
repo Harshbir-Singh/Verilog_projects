@@ -1,29 +1,44 @@
-//64X8 64- depth and 8-size
-module RAM(clk,addr,we,rst,din,dout);
-  input clk,we,rst;
-  output reg [7:0]dout;
-  input [7:0]din;
-  input [5:0]addr;
-  reg [7:0] mem[63:0];
-  integer i;
+module RAM(clk_p,clk_n,rst,we,din,dout,addr,buzz);
+  input wire clk_p,clk_n;
+  input rst,we;
+  wire clk;        // Differential clock input (positive)
+  output reg buzz;
+  input [1:0] addr,din;
+  output reg [1:0]dout;
   
+  IBUFDS #(
+        .DIFF_TERM("TRUE"),
+        .IBUF_LOW_PWR("FALSE")
+    ) ibufds_inst (
+        .O(clk),
+        .I(clk_p),
+        .IB(clk_n)
+    );
+  
+  reg [1:0]mem[0:3];
+  integer i;
   always@(posedge clk)
+ 
     begin
-      if(rst == 1'b1)
+      buzz <= 1'b0;
+      if(rst==1'b1)
         begin
-          for(i=0;i<64;i = i+1)
-            begin
-              mem[i] <= 8'h00;
-            end
-          dout <= 8'h00;
+         buzz<=1'b1;
+         dout<=2'b00;
+         for(i=0;i<64;i=i+1)
+           begin
+            mem[i]<=2'b00;
+           end
         end
       else
-        begin
-          if(we == 1'b1)
+        if(we==1'b1)
+          begin
             mem[addr] <= din;
-          else
-            dout <= mem[addr];
-        end
-    end
-    
+          end
+        else 
+          begin
+            dout <= mem[addr];  
+            
+          end
+   end
 endmodule
