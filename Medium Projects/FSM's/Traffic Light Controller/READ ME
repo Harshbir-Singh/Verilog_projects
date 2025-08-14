@@ -1,0 +1,29 @@
+Traffic Light Controller
+
+A simple 3-way intersection traffic light controller in Verilog with emergency override.
+
+- Features:
+
+Controls 3 roads with red, green, yellow lights
+Emergency mode switches to road with highest traffic
+Outputs current road's traffic count
+
+- How it works:
+
+Normal operation cycles through 3 states:
+State 1: Road0=Green, Road1=Yellow, Road2=Red
+State 2: Road0=Red, Road1=Green, Road2=Yellow
+State 3: Road0=Yellow, Road1=Red, Road2=Green
+Emergency mode immediately switches to the road with most traffic.
+
+- State Machine:
+
+Uses 2-bit state encoding (00, 01, 10) with standard FSM structure:
+Clocked state register
+Combinational next state logic
+Combinational output logic
+
+- Usage:
+
+Compile with any Verilog simulator. Create testbench with clock and input signals to observe traffic light cycling.
+Reset initializes to state 1. Emergency signal overrides normal cycling.
