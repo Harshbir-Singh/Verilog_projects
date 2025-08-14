@@ -19,9 +19,6 @@ Emergency mode immediately switches to the road with most traffic.
 - State Machine:
 
 Uses 2-bit state encoding (00, 01, 10) with standard FSM structure:
-Clocked state register
-Combinational next state logic
-Combinational output logic
 
 - Usage:
 
