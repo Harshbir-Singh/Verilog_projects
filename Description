@@ -12,6 +12,7 @@ RippleCarryAdder
 -Intermediate:
 FSM's
 CMOS Inverter
+Single-Port RAM
 
 -Advanced:
 MIPS32 Processor
