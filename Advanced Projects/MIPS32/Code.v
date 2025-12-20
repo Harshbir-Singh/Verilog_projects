@@ -26,16 +26,16 @@ module pipe_MIPS32(clk1,clk2);
       if((EX_MEM_IR[31:26] == BEQZ)&&(EX_MEM_Cond == 1) || (EX_MEM_IR[31:26] == BNEQZ)&&(EX_MEM_Cond == 0))
 
         begin
-          IF_ID_IR <= #2 Mem[EX_MEM_ALUOut];
-          TAKEN_BRANCH <= #2 1'b1;
-          IF_ID_NPC <= #2 EX_MEM_ALUOut + 1;
-          PC <= #2 EX_MEM_ALUOut + 1;
+          IF_ID_IR <=  Mem[EX_MEM_ALUOut];
+          TAKEN_BRANCH <=  1'b1;
+          IF_ID_NPC <= EX_MEM_ALUOut + 1;
+          PC <=  EX_MEM_ALUOut + 1;
         end
       else
         begin
-          IF_ID_IR <= #2 Mem[PC];
-          IF_ID_NPC <= #2 PC+1;
-          PC <= #2 PC + 1;
+          IF_ID_IR <=  Mem[PC];
+          IF_ID_NPC <=  PC+1;
+          PC <=  PC + 1;
         end
     end
 
@@ -143,4 +143,5 @@ module pipe_MIPS32(clk1,clk2);
 
 
 endmodule
+
 
