@@ -1,0 +1,58 @@
+`timescale 1ns / 1ps
+
+module tb;
+
+  reg clk;
+  reg reset;
+  reg [15:0] value;
+
+  pipe_MIPS32 dut (
+    .clk(clk),
+    .reset(reset)
+  );
+
+  initial begin
+    clk = 0;
+    forever #5 clk = ~clk;
+  end
+
+  initial begin
+    reset = 1;
+    #20;
+    reset = 0;
+  end
+
+ 
+  initial begin
+  
+    dut.Reg[2] = 32'd6;
+    dut.Reg[3] = 32'd4;
+
+
+    // RR-ALU Examples
+ 
+    dut.IMem[0] = 32'h00432800; 
+    dut.IMem[1] = 32'h04433800; 
+    dut.IMem[2] = 32'h14434800; 
+
+    // RM-ALU Examples
+   
+    dut.IMem[3] = 32'h284B0003;
+    dut.IMem[4] = 32'h304D0003; 
+
+    value = 16'd3;
+  end
+
+  
+  initial begin
+    #300;
+    $display("R2 = %d, R3 = %d ; ADD:  R5  = %d",dut.Reg[2],dut.Reg[3],dut.Reg[5]);
+    $display("R2 = %d, R3 = %d ; SUB: R7  = %d",dut.Reg[2],dut.Reg[3], dut.Reg[7]);
+    $display("R2 = %d, R3 = %d ; MUL: R9  = %d",dut.Reg[2],dut.Reg[3], dut.Reg[9]);
+    $display("R2 = %d, value = %d ; ADDI: R11 = %d",dut.Reg[2],value, dut.Reg[11]);
+    $display("R2 = %d, value = %d ; SLTI: R13 = %d",dut.Reg[2],value, dut.Reg[13]);
+
+    $finish;
+  end
+
+endmodule
