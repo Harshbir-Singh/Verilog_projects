@@ -59,7 +59,7 @@ module pipe_MIPS32(clk1,clk2);
         ADDI,SUBI,SLTI: ID_EX_type <=  RM_ALU;
         LW: ID_EX_type <=  LOAD;
         SW: ID_EX_type <=  STORE;
-        BEQZ,BNEQZ: ID_EX_type <=  STORE;
+        BEQZ,BNEQZ: ID_EX_type <=  BRANCH;
         HLT: ID_EX_type <=  HALT;
         default: ID_EX_type <=  HALT;
       endcase
@@ -143,5 +143,6 @@ module pipe_MIPS32(clk1,clk2);
 
 
 endmodule
+
 
 
