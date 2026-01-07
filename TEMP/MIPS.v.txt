@@ -2,30 +2,19 @@ module pipe_MIPS32 (
     input clk,
     input reset
 );
-
-
+  
   reg [31:0] PC;
   reg [31:0] IF_ID_IR, IF_ID_NPC;
-
-
   reg [31:0] ID_EX_IR, ID_EX_NPC, ID_EX_A, ID_EX_B, ID_EX_Imm;
   reg [2:0]  ID_EX_type;
-
-
   reg [31:0] EX_MEM_IR, EX_MEM_ALUOut, EX_MEM_B;
-  reg        EX_MEM_Cond;
+  reg EX_MEM_Cond;
   reg [2:0]  EX_MEM_type;
-
-
   reg [31:0] MEM_WB_IR, MEM_WB_ALUOut, MEM_WB_LMD;
   reg [2:0]  MEM_WB_type;
-
-
   reg [31:0] Reg [0:31];
-
-
-  reg [31:0] IMem [0:1023];   // Instruction Memory
-  reg [31:0] DMem [0:1023];   // Data Memory
+  reg [31:0] IMem [0:1023];   
+  reg [31:0] DMem [0:1023];   
 
 
 
@@ -56,7 +45,6 @@ module pipe_MIPS32 (
 
 
   // IF STAGE
-
   always @(posedge clk) begin
     if (reset) begin
       PC <= 0;
@@ -66,21 +54,19 @@ module pipe_MIPS32 (
     end
     else if (!HALTED) begin
       if (branch_taken) begin
-        IF_ID_IR  <= IMem[EX_MEM_ALUOut[11:2]]; // FPGA FIX
+        IF_ID_IR  <= IMem[EX_MEM_ALUOut[11:2]]; 
         IF_ID_NPC <= EX_MEM_ALUOut + 1;
         PC        <= EX_MEM_ALUOut + 1;
       end
       else begin
-        IF_ID_IR  <= IMem[PC[11:2]];             // FPGA FIX
+        IF_ID_IR  <= IMem[PC[11:2]];            
         IF_ID_NPC <= PC + 1;
         PC        <= PC + 1;
       end
     end
   end
 
-
   // ID STAGE
-
   always @(posedge clk) begin
     if (!HALTED) begin
       ID_EX_IR  <= IF_ID_IR;
@@ -104,7 +90,6 @@ module pipe_MIPS32 (
 
 
   // EX STAGE
-
   always @(posedge clk) begin
     if (!HALTED) begin
       EX_MEM_IR   <= ID_EX_IR;
@@ -119,7 +104,7 @@ module pipe_MIPS32 (
             OR : EX_MEM_ALUOut <= ID_EX_A | ID_EX_B;
             SLT: EX_MEM_ALUOut <= (ID_EX_A < ID_EX_B);
             MUL: EX_MEM_ALUOut <= ID_EX_A * ID_EX_B;
-            default: EX_MEM_ALUOut <= 0; // FPGA FIX
+            default: EX_MEM_ALUOut <= 0; 
           endcase
         end
 
@@ -128,7 +113,7 @@ module pipe_MIPS32 (
             ADDI: EX_MEM_ALUOut <= ID_EX_A + ID_EX_Imm;
             SUBI: EX_MEM_ALUOut <= ID_EX_A - ID_EX_Imm;
             SLTI: EX_MEM_ALUOut <= (ID_EX_A < ID_EX_Imm);
-            default: EX_MEM_ALUOut <= 0; // FPGA FIX
+            default: EX_MEM_ALUOut <= 0; 
           endcase
         end
 
@@ -138,26 +123,24 @@ module pipe_MIPS32 (
         end
 
         BRANCH: begin
-          EX_MEM_ALUOut <= ID_EX_NPC + ID_EX_Imm; // PC-relative
+          EX_MEM_ALUOut <= ID_EX_NPC + ID_EX_Imm; 
           EX_MEM_Cond   <= (ID_EX_A == 0);
         end
       endcase
     end
   end
-
-
-  // BRANCH DECISION (FPGA FIX: single driver)
-
+  // BRANCH DECISION 
   always @(posedge clk) begin
-    if (!HALTED) begin
-      branch_taken <=
-        ((EX_MEM_IR[31:26] == BEQZ)  && EX_MEM_Cond) ||
-        ((EX_MEM_IR[31:26] == BNEQZ) && !EX_MEM_Cond);
-    end
+  if (reset)
+    branch_taken <= 1'b0;
+  else if (!HALTED)
+    branch_taken <=
+      ((EX_MEM_IR[31:26] == BEQZ)  && EX_MEM_Cond) ||
+      ((EX_MEM_IR[31:26] == BNEQZ) && !EX_MEM_Cond);
   end
 
-  // MEM STAGE
   
+  // MEM STAGE
   always @(posedge clk) begin
     if (!HALTED) begin
       MEM_WB_IR   <= EX_MEM_IR;
@@ -168,7 +151,7 @@ module pipe_MIPS32 (
           MEM_WB_ALUOut <= EX_MEM_ALUOut;
 
         LOAD:
-          MEM_WB_LMD <= DMem[EX_MEM_ALUOut[11:2]]; // FPGA FIX
+          MEM_WB_LMD <= DMem[EX_MEM_ALUOut[11:2]]; 
 
         STORE:
           if (!branch_taken)
@@ -178,7 +161,6 @@ module pipe_MIPS32 (
   end
 
   // WB STAGE
-  
   always @(posedge clk) begin
     if (!HALTED && !branch_taken) begin
       case (MEM_WB_type)
