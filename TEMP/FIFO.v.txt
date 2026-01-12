@@ -1,0 +1,43 @@
+`timescale 1ns / 1ps
+module FIFO(
+  input clk,
+  input rst, 
+  input wr_en,
+  input [7:0] wr_data,
+  input rd_en,
+  output reg [7:0] rd_data,
+  output reg full,
+  output reg empty
+);
+  reg [7:0] mem [0:511];
+  reg [8:0] rd_ptr, wr_ptr;
+  
+  always@(posedge clk)
+    begin
+      full<=0;
+      empty<=0;
+      if(rst)
+        begin
+          rd_ptr<=0;
+          wr_ptr<=0;
+          full<=0;
+          empty<=1;
+        end
+      else
+        begin
+          empty <= (wr_ptr == rd_ptr);
+          full <= (wr_ptr==511);
+          if(wr_en&&!full&&!rd_en)
+            begin
+              mem[wr_ptr]<=wr_data;
+              wr_ptr<=wr_ptr+1;
+            end
+          else if(rd_en&&!empty&&!wr_en&&(wr_ptr>rd_ptr))
+            begin
+              rd_data<= mem[rd_ptr];
+              rd_ptr<=rd_ptr+1;
+            end
+        end
+    end
+    
+endmodule
