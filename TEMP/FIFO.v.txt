@@ -10,34 +10,35 @@ module FIFO(
   output reg empty
 );
   reg [7:0] mem [0:511];
-  reg [8:0] rd_ptr, wr_ptr;
+  reg [9:0] rd_ptr, wr_ptr; //wrap-around logic
+  
+  wire [8:0] wr_addr = wr_ptr[8:0];
+  wire [8:0] rd_addr = rd_ptr[8:0];
   
   always@(posedge clk)
     begin
-      full<=0;
-      empty<=0;
       if(rst)
         begin
           rd_ptr<=0;
           wr_ptr<=0;
           full<=0;
           empty<=1;
+          rd_data<=0;
         end
       else
         begin
-          empty <= (wr_ptr == rd_ptr);
-          full <= (wr_ptr==511);
-          if(wr_en&&!full&&!rd_en)
+          if(wr_en&&!full)
             begin
-              mem[wr_ptr]<=wr_data;
+              mem[wr_addr]<=wr_data;
               wr_ptr<=wr_ptr+1;
             end
-          else if(rd_en&&!empty&&!wr_en&&(wr_ptr>rd_ptr))
+          if(rd_en&&!empty)
             begin
-              rd_data<= mem[rd_ptr];
+              rd_data<= mem[rd_addr];
               rd_ptr<=rd_ptr+1;
             end
+          empty <= (wr_ptr == rd_ptr);
+          full <= (wr_ptr[8:0]==rd_ptr[8:0]&&rd_ptr[9]!=wr_ptr[9]);
         end
-    end
-    
+    end   
 endmodule
