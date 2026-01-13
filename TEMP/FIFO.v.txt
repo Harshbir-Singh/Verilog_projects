@@ -9,11 +9,14 @@ module FIFO(
   output reg full,
   output reg empty
 );
+ 
+  
   reg [7:0] mem [0:511];
   reg [9:0] rd_ptr, wr_ptr; //wrap-around logic
-  
   wire [8:0] wr_addr = wr_ptr[8:0];
   wire [8:0] rd_addr = rd_ptr[8:0];
+  wire [9:0] wr_ptr_next = wr_ptr + (!full&&wr_en);// so that we the full and empty are updated with correct values preventing unprecedented read pinter increment
+  wire [9:0] rd_ptr_next = rd_ptr + (!empty&&rd_en);
   
   always@(posedge clk)
     begin
@@ -37,8 +40,8 @@ module FIFO(
               rd_data<= mem[rd_addr];
               rd_ptr<=rd_ptr+1;
             end
-          empty <= (wr_ptr == rd_ptr);
-          full <= (wr_ptr[8:0]==rd_ptr[8:0]&&rd_ptr[9]!=wr_ptr[9]);
+          empty <= (wr_ptr_next == rd_ptr_next);
+          full <= (wr_ptr_next[8:0]==rd_ptr_next[8:0]&&rd_ptr_next[9]!=wr_ptr_next[9]);
         end
     end   
 endmodule
