@@ -11,9 +11,6 @@ module FIFO(
   output reg empty
 );
 
-  // =====================================================
-  // Clock buffering (unchanged)
-  // =====================================================
   wire clk_ibuf;
   wire clk;  
 
@@ -30,10 +27,6 @@ module FIFO(
       .I(clk_ibuf),
       .O(clk)
   );
-
-  // =====================================================
-  // Button synchronizers + edge detectors
-  // =====================================================
   reg [1:0] wr_sync, rd_sync;
   reg       wr_sync_d, rd_sync_d;
 
@@ -60,9 +53,6 @@ module FIFO(
   wire [9:0] wr_ptr_next = wr_ptr + (!full  && wr_pulse);
   wire [9:0] rd_ptr_next = rd_ptr + (!empty && rd_pulse);
 
-  // =====================================================
-  // FIFO logic
-  // =====================================================
   always @(posedge clk) begin
     if (rst) begin
       rd_ptr  <= 0;
@@ -92,3 +82,4 @@ module FIFO(
   end
 
 endmodule
+
