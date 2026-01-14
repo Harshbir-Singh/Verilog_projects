@@ -41,9 +41,6 @@ module FIFO(
   wire wr_pulse = wr_sync[1] & ~wr_sync_d;
   wire rd_pulse = rd_sync[1] & ~rd_sync_d;
 
-  // =====================================================
-  // FIFO storage and pointers
-  // =====================================================
   reg [3:0] mem [0:511];
   reg [9:0] rd_ptr, wr_ptr;
 
@@ -62,19 +59,19 @@ module FIFO(
       rd_data <= 4'b0;
     end else begin
 
-      // Write
+
       if (wr_pulse && !full) begin
         mem[wr_addr] <= wr_data;
         wr_ptr <= wr_ptr + 1'b1;
       end
 
-      // Read
+  
       if (rd_pulse && !empty) begin
         rd_data <= mem[rd_addr];
         rd_ptr <= rd_ptr + 1'b1;
       end
 
-      // Flags
+
       empty <= (wr_ptr_next == rd_ptr_next);
       full  <= (wr_ptr_next[8:0] == rd_ptr_next[8:0] &&
                 wr_ptr_next[9]   != rd_ptr_next[9]);
@@ -82,4 +79,5 @@ module FIFO(
   end
 
 endmodule
+
 
