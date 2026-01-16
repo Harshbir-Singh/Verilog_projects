@@ -1,0 +1,46 @@
+`timescale 1ns / 1ps
+module FIFO(
+  input clk,
+  input rst, 
+  input wr_en,
+  input [7:0] wr_data,
+  input rd_en,
+  output reg [7:0] rd_data,
+  output reg full,
+  output reg empty
+);
+ 
+  reg [7:0] mem [0:511];
+  reg [9:0] rd_ptr, wr_ptr; //wrap-around logic
+  wire [8:0] wr_addr = wr_ptr[8:0];
+  wire [8:0] rd_addr = rd_ptr[8:0];
+  wire [9:0] wr_ptr_next = wr_ptr + (!full&&wr_en);// so that we the full and empty are updated with correct values preventing unprecedented read pinter increment
+  wire [9:0] rd_ptr_next = rd_ptr + (!empty&&rd_en);
+  
+  always@(posedge clk)
+    begin
+      if(rst)
+        begin
+          rd_ptr<=0;
+          wr_ptr<=0;
+          full<=0;
+          empty<=1;
+          rd_data<=0;
+        end
+      else
+        begin
+          if(wr_en&&!full)
+            begin
+              mem[wr_addr]<=wr_data;
+              wr_ptr<=wr_ptr+1;
+            end
+          if(rd_en&&!empty)
+            begin
+              rd_data<= mem[rd_addr];
+              rd_ptr<=rd_ptr+1;
+            end
+          empty <= (wr_ptr_next == rd_ptr_next);
+          full <= (wr_ptr_next[8:0]==rd_ptr_next[8:0]&&rd_ptr_next[9]!=wr_ptr_next[9]);
+        end
+    end   
+endmodule
