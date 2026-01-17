@@ -46,9 +46,9 @@ module tb;
   initial 
     begin
       //Examples of RR-ALU
-      dut.Mem[0] = 32'h00432800;
-      dut.Mem[1] = 32'h04433800;
-      dut.Mem[2] = 32'h14434800;
+      dut.IMem[0] = 32'h00432800;
+      dut.IMem[1] = 32'h04433800;
+      dut.IMem[2] = 32'h14434800;
       dut.Reg[2] = 32'd6;
       dut.Reg[3] = 32'd4;
       
@@ -61,8 +61,8 @@ module tb;
   initial
     begin
       //Examples of RM-ALU
-      dut.Mem[3] = 32'h284B0003;
-      dut.Mem[4] = 32'h304D0003;
+      dut.IMem[3] = 32'h284B0003;
+      dut.IMem[4] = 32'h304D0003;
       value = 16'h0003;
       
       repeat (10) @(posedge clk1);
