@@ -8,7 +8,8 @@ module pipe_MIPS32(clk1,clk2);
   reg [31:0] MEM_WB_IR, MEM_WB_ALUOut, MEM_WB_LMD;
 
   reg [31:0] Reg [0:31];
-  reg [31:0] Mem [0:1023];
+  reg [31:0] IMem [0:1023];
+  reg [31:0] DMem [0:1023];
 
   parameter ADD = 6'b000000, SUB = 6'b000001, AND = 6'b000010, OR = 6'b000011, SLT = 6'b000100, MUL = 6'b000101, HLT = 6'b111111, LW = 6'b001000, SW = 6'b001001, ADDI = 6'b001010, SUBI = 6'b001011, SLTI = 6'b001100, BNEQZ = 6'b001101, BEQZ = 6'b001110;
 
@@ -26,14 +27,14 @@ module pipe_MIPS32(clk1,clk2);
       if((EX_MEM_IR[31:26] == BEQZ)&&(EX_MEM_Cond == 1) || (EX_MEM_IR[31:26] == BNEQZ)&&(EX_MEM_Cond == 0))
 
         begin
-          IF_ID_IR <=  Mem[EX_MEM_ALUOut];
+          IF_ID_IR <=  DMem[EX_MEM_ALUOut];
           TAKEN_BRANCH <=  1'b1;
           IF_ID_NPC <= EX_MEM_ALUOut + 1;
           PC <=  EX_MEM_ALUOut + 1;
         end
       else
         begin
-          IF_ID_IR <=  Mem[PC];
+          IF_ID_IR <=  IMem[PC];
           IF_ID_NPC <=  PC+1;
           PC <=  PC + 1;
         end
@@ -122,8 +123,8 @@ module pipe_MIPS32(clk1,clk2);
 
         case (EX_MEM_type)
           RR_ALU, RM_ALU: MEM_WB_ALUOut <=  EX_MEM_ALUOut;
-          LOAD: MEM_WB_LMD <=  Mem[EX_MEM_ALUOut];
-          STORE:  if(TAKEN_BRANCH==0) Mem[EX_MEM_ALUOut] <=  EX_MEM_B;
+          LOAD: MEM_WB_LMD <=  DMem[EX_MEM_ALUOut];
+          STORE:  if(TAKEN_BRANCH==0) DMem[EX_MEM_ALUOut] <=  EX_MEM_B;
         endcase
       end
 //WB Stage
@@ -131,18 +132,15 @@ module pipe_MIPS32(clk1,clk2);
     
       begin
         if(TAKEN_BRANCH == 0)
-
-        case (MEM_WB_type)
-          RR_ALU: Reg[MEM_WB_IR[15:11]] <=  MEM_WB_ALUOut;
-          RM_ALU: Reg[MEM_WB_IR[20:16]] <=  MEM_WB_ALUOut;
-          LOAD:  Reg[MEM_WB_IR[20:16]] <=  MEM_WB_LMD;
-          HALT: HALTED <= 1'b1;
-        endcase
+          begin
+            case (MEM_WB_type)
+              RR_ALU: Reg[MEM_WB_IR[15:11]] <=  MEM_WB_ALUOut;
+              RM_ALU: Reg[MEM_WB_IR[20:16]] <=  MEM_WB_ALUOut;
+              LOAD:  Reg[MEM_WB_IR[20:16]] <=  MEM_WB_LMD;
+              HALT: HALTED <= 1'b1;
+            endcase
+          end      
       end
-  
-
-
 endmodule
-
 
 
