@@ -1,13 +1,14 @@
 `timescale 1ns / 1ps
 module tb();
 
-reg clk, rst, wr_en, rd_en;
+reg clk_p, clk_n, rst, wr_en, rd_en;
 reg [7:0] wr_data;
 wire [7:0] rd_data;
 wire full, empty;
 
 FIFO dut(
-  .clk(clk),
+  .clk_p(clk_p),
+  .clk_n(clk_n),
   .rst(rst), 
   .wr_en(wr_en),
   .wr_data(wr_data),
@@ -15,13 +16,17 @@ FIFO dut(
   .rd_data(rd_data),
   .full(full),
   .empty(empty)
-  ); 
+); 
 
 
 initial 
   begin
-    clk = 0;
-    forever #5clk = ~clk;
+    clk_p = 1;
+    clk_n = 0;
+    forever begin
+     #5clk_p <= ~clk_p;
+     clk_n <= ~clk_n;
+    end
   end
   
 initial
@@ -33,7 +38,7 @@ initial
 initial
   begin
     wr_en =0; rd_en = 0;
-    #20 wr_en = 1; wr_data = 8'h5;
+    #20 wr_en = 1; wr_data = 4'h5;
     #10 wr_en = 0; 
     #10 rd_en = 1; 
   end  
