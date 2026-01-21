@@ -13,7 +13,6 @@ MODULES:
 - FIFO Core (FIFO.v)
   - 512×8-bit memory array
   - 10-bit read/write pointers (MSB for wrap-around detection)
-  - Combinational flag generation for zero-cycle latency
   - Simultaneous read/write support
 
 - Verification:
