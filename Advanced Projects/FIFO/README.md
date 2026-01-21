@@ -1,5 +1,5 @@
 **Synchronous FIFO IP Core**
-512×8-bit synchronous FIFO with SystemVerilog verification and FPGA deployment on Zynq ZCU104.
+- 512×8-bit synchronous FIFO with SystemVerilog verification and FPGA deployment on Zynq ZCU104.
 
 
 Features:
