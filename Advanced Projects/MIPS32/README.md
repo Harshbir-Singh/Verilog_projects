@@ -6,7 +6,7 @@ Key Technical Features:
 - Instruction Set Support: Implemented R-type (ADD, SUB, MUL, SLT), I-type (ADDI, SUBI, SLTI), Data Transfer (LW, SW), and Control Flow (BEQZ, BNEQZ) instructions.
 - Memory Organization: Utilized a Harvard Architecture with independent instruction and data memory modules to eliminate structural hazards during simultaneous access.
 - Logic Design: Developed a custom ALU, Register File (32 registers), Control Unit, and Sign-Extension logic for 16-bit immediates.
-- Verification: Conducted functional verification using a Verilog testbench, simulating real-world instruction sequences and monitoring register-file write-backs.
+- Verification: Conducted functional verification using a Verilog testbench, simulating real world instruction sequences and monitoring register file write backs.
 
 Tools Used:
 
