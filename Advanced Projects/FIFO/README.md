@@ -16,7 +16,7 @@ MODULES:
   - Simultaneous read/write support
 
 - Verification:
-  - SystemVerilog testbench with:
+  - SystemVerilog testbench 
   - Queue-based reference model
   - Randomized stimulus generation
   - Coverage for corner cases (empty, simultaneous R/W, R/W combinations)
