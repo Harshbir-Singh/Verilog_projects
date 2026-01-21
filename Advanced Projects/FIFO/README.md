@@ -17,9 +17,8 @@ MODULES:
 
 - Verification:
   - SystemVerilog testbench with:
-  - Queue-based golden reference model
+  - Queue-based reference model
   - Randomized stimulus generation
-  - Self-checking mechanism
   - Coverage for corner cases (empty, simultaneous R/W, R/W combinations)
 
 - Top Module (top_module.v)
