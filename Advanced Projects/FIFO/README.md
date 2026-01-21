@@ -42,3 +42,5 @@ LEDs → Full/Empty status indicators
 
 
 Video: https://go.screenpal.com/watch/cOVrbBn3egt
+![FIFO_config](https://github.com/user-attachments/assets/a498731a-8b79-464f-9388-acd61d189292)
+
