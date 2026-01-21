@@ -3,11 +3,11 @@
 
 
 Features:
-Capacity: 512 entries × 8-bit data width
-Clock: 100 MHz synchronous operation
-Resources: 34 LUTs, 22 FFs, 0.5 BRAM
-Flags: Full and empty indicators with wrap-around logic
-Verified: Self-checking SystemVerilog testbench with queue-based reference model
+-Capacity: 512 entries × 8-bit data width
+-Clock: 100 MHz synchronous operation
+-Resources: 34 LUTs, 22 FFs, 0.5 BRAM
+-Flags: Full and empty indicators with wrap-around logic
+-Verified: Self-checking SystemVerilog testbench with queue-based reference model
 
 MODULES:
 - FIFO Core (FIFO.v)
