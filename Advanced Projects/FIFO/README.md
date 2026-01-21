@@ -11,29 +11,29 @@ Features:
 
 MODULES:
 - FIFO Core (FIFO.v)
-512×8-bit memory array
-10-bit read/write pointers (MSB for wrap-around detection)
-Combinational flag generation for zero-cycle latency
-Simultaneous read/write support
+  - 512×8-bit memory array
+  - 10-bit read/write pointers (MSB for wrap-around detection)
+  - Combinational flag generation for zero-cycle latency
+  - Simultaneous read/write support
 
 - Verification:
-SystemVerilog testbench with:
-Queue-based golden reference model
-Randomized stimulus generation
-Self-checking mechanism
-Coverage for corner cases (empty, simultaneous R/W, R/W combinations)
+  - SystemVerilog testbench with:
+  - Queue-based golden reference model
+  - Randomized stimulus generation
+  - Self-checking mechanism
+  - Coverage for corner cases (empty, simultaneous R/W, R/W combinations)
 
 - Top Module (top_module.v)
-Differential clock input (IBUFDS/BUFG)
-Button debounce logic (~21ms at 100MHz)
-Edge detection for single-cycle pulses
-Instantiates FIFO IP core with 4-bit interface
+  - Differential clock input (IBUFDS/BUFG)
+  - Button debounce logic (~21ms at 100MHz)
+  - Edge detection for single-cycle pulses
+  - Instantiates FIFO IP core with 4-bit interface
 
 
 
 Hardware Demo:
-Board: Zynq ZCU104
-Interface:
+- Board: Zynq ZCU104
+- Interface:
 
 DIP Switches [3:0] → Write data
 Buttons → Write/Read enable, Reset
