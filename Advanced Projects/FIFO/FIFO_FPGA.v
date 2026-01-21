@@ -1,0 +1,113 @@
+`timescale 1ns / 1ps
+
+// Debounce logic
+module top_module(
+  input clk_p,
+  input clk_n,
+  input rst,
+  input wr,
+  input rd,
+  input [3:0] data,
+  output [3:0] rd_data,
+  output full,
+  output empty
+);
+  wire clk_ibuf;
+  wire clk;  
+
+  IBUFDS #(
+      .DIFF_TERM("TRUE"),     
+      .IBUF_LOW_PWR("FALSE")  
+  ) ibufds_clk (
+      .I  (clk_p),
+      .IB (clk_n),
+      .O  (clk_ibuf)
+  );
+    
+  BUFG bufg_clk (
+      .I(clk_ibuf),
+      .O(clk)
+  );
+  
+  reg [1:0] wr_sync, rd_sync;
+  reg wr_sync_d, rd_sync_d;
+  reg [20:0] debounce_wr,debounce_rd;
+  reg wr_stable, rd_stable, rd_stable_d, wr_stable_d;
+  
+  always@(posedge clk)
+    begin
+      wr_sync <= {wr_sync[0],wr};
+      rd_sync <= {rd_sync[0],rd};
+      wr_sync_d <= wr_sync[1];
+      rd_sync_d <= rd_sync[1];
+    end
+  always@(posedge clk)
+    begin
+      if(rst)
+        begin
+          debounce_wr <=0;
+          debounce_rd <=0;
+          wr_stable <= 0;
+          rd_stable <= 0;
+
+        end
+      else 
+        begin
+          if(wr_sync_d)
+            begin
+              if(debounce_wr[20] == 0)
+                begin
+                  debounce_wr<=debounce_wr+1;
+                end
+              else
+                begin
+                  wr_stable <= 1;
+                end
+            end
+          else 
+            begin
+              debounce_wr<=0;
+              wr_stable<=0;
+            end
+          
+          if(rd_sync_d)
+            begin
+              if(debounce_rd[20] == 0)
+                begin
+                  debounce_rd<=debounce_rd+1;
+                end
+              else
+                begin
+                  rd_stable <= 1;
+                end
+            end
+          else 
+            begin
+              debounce_rd<=0;
+              rd_stable<=0;
+            end
+        end
+    end
+    
+    // 0-1 Edge Detection
+    always@(posedge clk)
+      begin
+        wr_stable_d<=wr_stable;
+        rd_stable_d<=rd_stable;
+      end
+    wire wr_pulse = wr_stable &~wr_stable_d;
+    wire rd_pulse = rd_stable &~rd_stable_d;
+    
+    FIFO_0 FIFO (
+    .clk(clk),
+    .rst(rst),
+    .wr_en(wr_pulse),
+    .wr_data(data),
+    .rd_en(rd_pulse),
+    .rd_data(rd_data),
+    .full(full),
+    .empty(empty)
+  );
+endmodule
+
+
