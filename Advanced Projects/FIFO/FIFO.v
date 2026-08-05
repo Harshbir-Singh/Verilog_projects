@@ -14,7 +14,7 @@ module FIFO(
   reg [9:0] rd_ptr, wr_ptr; //wrap-around logic
   wire [8:0] wr_addr = wr_ptr[8:0];
   wire [8:0] rd_addr = rd_ptr[8:0];
-  wire [9:0] wr_ptr_next = wr_ptr + (!full&&wr_en);// so that we the full and empty are updated with correct values preventing unprecedented read pinter increment
+  wire [9:0] wr_ptr_next = wr_ptr + (!full&&wr_en);// so that the full and empty are updated with correct values preventing unprecedented read pointer increment
   wire [9:0] rd_ptr_next = rd_ptr + (!empty&&rd_en);
   
   always@(posedge clk)
